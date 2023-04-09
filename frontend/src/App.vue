@@ -6,14 +6,14 @@
     <div v-else>
       <label for="loginId">
         <span>Id</span>
-        <input type="text" id="loginId" />
+        <input type="text" id="loginId" v-model="state.form.loginId" />
       </label>
       <label for="loginPw">
         <span>password</span>
-        <input type="password" id="loginPw" />
+        <input type="password" id="loginPw" v-model="state.form.loginPw" />
       </label>
       <hr />
-      <button>login</button>
+      <button @click="submit()">login</button>
     </div>
   </div>
 </template>
@@ -29,14 +29,30 @@ export default {
         mid: null,
         memberName: '',
       },
+      form: {
+        loginId: '',
+        loginPw: '',
+      },
     });
+
+    const submit = () => {
+      const args = {
+        loginId: state.form.loginId,
+        loginPw: state.form.loginPw,
+      };
+      axios.post('/api/account', args).then((res) => {
+        alert('login success');
+        state.account = res.data;
+        console.log(res.data);
+      });
+    };
 
     axios.get('/api/account').then((res) => {
       console.log(res);
       state.account = res.data;
     });
 
-    return { state };
+    return { state, submit };
   },
 };
 </script>
